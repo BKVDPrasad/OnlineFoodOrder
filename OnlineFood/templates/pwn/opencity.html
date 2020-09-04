@@ -1,9 +1,90 @@
 {% extends 'pwn/welcome.html' %}
 
 {% block admin_welcome %}
+    {% load static %}
 
     <div class="col-sm-6">
           <h1>City page</h1>
     </div>
+    <form action="{% url 'savecity' %}" method="post" enctype="multipart/form-data">
+    {% csrf_token %}
+
+    <table align="center">
+    <tr>
+        <th><input type="text" name="t1" required placeholder="City Name"></th>
+
+            <th>
+                <select name="t2" required>
+                    {% for x in state %}
+                    <option value="{{ x.id }}">{{ x.name }}</option>
+                    {% endfor %}
+                </select>
+            </th>
+
+        <th><input type="file" name="t3" required></th>
+        <th><button TYPE="submit">SAVE</button></th>
+    </tr>
+    <tr><th></th></tr><tr><th></th></tr><tr><th></th></tr>
+    {% for x in messages %}
+        <tr align="center">
+            <th colspan="4">{{ x }}</th>
+        </tr>
+    {% endfor %}
+    </table>
+    </form>
+
+<br><br>
+
+    {% if ucity %}
+    <h1 style="text-align: center">City Update</h1>
+        <form action="{% url 'updatecityid' %}?cid={% for x in ucity %}{{ x.id }}{% endfor %}" method="post" enctype="multipart/form-data">
+        {% csrf_token %}
+
+        <table align="center">
+        {% for x in ucity %}
+    <tr>
+        <th><input type="text" name="t1" required value="{{ x.name }}"></th>
+
+            <th>
+                <select name="t2" required>
+                    {% for x in ucity %}
+                    <option value="{{ x.id }}">{{ x.city_state.name }}</option>
+                    {% endfor %}
+                </select>
+            </th>
+
+        <th><input type="file" name="t3" required></th>
+        <th><button TYPE="submit">UPDATE</button></th>
+    </tr>
+        {% endfor %}
+        </table>
+        </form>
+    {% endif %}
+    <br><br>
+
+
+    <table align="center" border="2" width="500" style="text-align: center">
+    <tr>
+        <th>Id</th>
+        <th>City</th>
+        <th>Photo</th>
+        <th>State</th>
+        <th>Update</th>
+        <th>Delete</th>
+    </tr>
+    {% for x in city %}
+    <tr>
+        <th>{{ x.id }}</th>
+        <th>{{ x.name }}</th>
+        <th><img src="{{ x.photo.url }}" height="20" width="20"></th>
+        <th>{{ x.city_state.name }}</th>
+        <th><a href="{% url 'updatecity' %}?cid={{ x.id }}"><img src="{% static 'images/update.png' %}" width="20" height="20"></a></th>
+
+        <th><a href="{% url 'cdelete' %}?cid={{ x.id }}"><img src="{% static 'images/delete.png' %}" width="20" height="20"></a></th>
+{#        <th><img src="{% static 'images/delete.png' %}}" width="20" height="20"></th>#}
+    </tr>
+    {% endfor %}
+    </table>
+
 
 {% endblock %}
