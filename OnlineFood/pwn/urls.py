@@ -1,6 +1,7 @@
-
+from django.conf.urls.static import static
 from django.urls import path
 
+from OnlineFood import settings
 from pwn import views
 
 urlpatterns = [
@@ -14,4 +15,11 @@ urlpatterns = [
     path('vendor/',views.openVendor,name='vendor'),
     path('resports/',views.openReporsts,name='reports'),
     path('logout/',views.pwn_login_check,name='logout'),
+    path('savestate/',views.savestate,name='savestate'),
+    path('updatestate/',views.updatestate,name='updatestate'),
+    path('updatestateid/',views.updatestateid,name='updatestateid'),
+    path('sdelete/',views.sdelete,name='sdelete')
 ]
+
+if settings.DEBUG:
+    urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

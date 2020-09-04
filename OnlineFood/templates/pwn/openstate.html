@@ -1,10 +1,85 @@
 
 {% extends 'pwn/welcome.html' %}
+{% load static %}
 
 {% block admin_welcome %}
 
-    <div class="col-sm-6">
-          <h1>Sate page</h1>
-    </div>
+{#    <div class="col-sm">#}
+{#          <h1>Sate page</h1>#}
+{#    </div>#}
+<table align="center">
+        <tr align="center"><th colspan="3">State Operations</th></tr>
+        <tr><th></th></tr>
+</table>
+
+
+
+{% if udata %}
+    <form action="{% url  'updatestateid' %}?sid={{ udata.id }}" method="post" enctype="multipart/form-data">
+        {% csrf_token %}
+
+        <table align="center">
+        <tr align="center"><th colspan="3">State Update</th></tr>
+        <tr><th></th></tr>
+        <tr>
+            <th>
+                <input type="text"value="{{ udata.name }}" name="t1" required>
+            </th>
+            <th>
+                <input type="file" value="{{ udata.photo }}" required name="t2">
+            </th>
+            <th><button type="submit">Update</button></th>
+        </tr>
+    </table>
+
+    </form>
+    {% endif %}
+
+        <form action="{% url 'savestate' %}" method="post" enctype="multipart/form-data">
+{% csrf_token %}
+    <table align="center">
+
+        <tr>
+            <th>
+                <input type="text" placeholder="State Name" name="t1" required>
+            </th>
+            <th>
+                <input type="file" placeholder="Image" required name="t2">
+            </th>
+            <th><button type="submit">save</button></th>
+        </tr>
+        {% for x in messages %}
+            <tr align="center">
+                <th colspan="3">{{ x }}</th>
+            </tr>
+        {% endfor %}
+
+    </table>
+</form>
+        <br><br><br>
+    <table align="center" border="2" width="500px" style="text-align: center">
+        <tr>
+            <th>Id</th>
+            <th>Name</th>
+            <th>Photo</th>
+            <th>Update</th>
+            <th>Delete</th>
+
+        </tr>
+        {% for x in data %}
+            <tr>
+                <th>{{x.id }}</th>
+                <th>{{ x.name }}</th>
+                <th><img src="{{ x.photo.url }}" width="40" height="40"></th>
+
+                <th><a href="{% url 'updatestate' %}?id={{ x.id }}"><img src="{% static 'images/update.png' %}" height="20px" width="20px"></a> </th>
+
+                <th>
+                    <a href="{% url 'sdelete' %}?sid={{ x.id }}"><img src="{% static 'images/delete.png' %}" height="20px" width="20px"></a>
+                </th>
+
+            </tr>
+        {% endfor %}
+        </table>
 
 {% endblock %}
